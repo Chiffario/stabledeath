@@ -1,0 +1,8 @@
+{
+    "type": "module",
+    "dependencies": {
+        "@libsql/client": "^0.17.0",
+        "drizzle-kit": "^0.31.8",
+        "drizzle-orm": "^0.45.1"
+    }
+}
