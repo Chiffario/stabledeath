@@ -8,7 +8,7 @@
 
 <div class="container">
     <div class="bar-container">
-        <div class="stable-bar" style="width: {stable_percentage}%"></div>
+        <div class="stable-bar" style="--stable: {stable_percentage}%"></div>
     </div>
     <div class="subscripts">
         <div id="stable">
@@ -22,29 +22,49 @@
 
 <style>
     .container {
+        display: flex;
+        flex-direction: column;
+        gap: .25rem;
+        width: 100%;
         height: 50px;
         margin: 20px;
     }
+
     .subscripts {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
-    }
-    .bar-container {
-        background-color: #ff66aa;
-    }
-    .stable-bar {
-        background-color: #66ccff;
+        font-size: 0.9rem;
+        padding: 0 .5rem;
     }
 
     .bar-container {
         width: 100%;
         height: 20px;
-        display: block;
-        margin-bottom: 1rem;
+        border-radius: 10px;
+
+        background-color: #ff66aa;
+
+        overflow: hidden;
     }
+
     .stable-bar {
-        height: 20px;
-        display: inline-block;
+        --slant: 3px;
+        position: relative;
+        width: calc(var(--stable) - var(--slant));
+        height: 100%;
+
+        background-color: #66ccff;
+    }
+
+    .stable-bar::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: calc(var(--slant) * -2);
+        width: calc(var(--slant) * 2);
+        height: 100%;
+        clip-path: polygon(0 0, 0% 100%, 100% 0);
+        background-color: #66ccff;
     }
 </style>

@@ -6,49 +6,100 @@
     const changelogs = data.changelogs;
     const peak = data.peak;
     const peakRel = data.peakRel;
-    console.log(data);
 </script>
 
-<h1>lazer vs stable user counts</h1>
-{#if changelogs}
-    <p>
-        current (last check was at {new Date(
-            changelogs.timestamp,
-        ).toLocaleString("en-UK")})
-    </p>
-    <Bars stable={changelogs.stable} lazer={changelogs.lazer} />
-    <p>
-        lazer user count peak (at {new Date(peak.timestamp).toLocaleString(
-            "en-UK",
-        )})
-    </p>
-{:else}
-    <div>uhhh</div>
-{/if}
-{#if peak}
-    <Bars stable={peak.stable} lazer={peak.lazer} />
-    <p>
-        lazer user percentage peak (at {new Date(
-            peakRel.timestamp,
-        ).toLocaleString("en-UK")})
-    </p>
-    <Bars stable={peakRel.stable} lazer={peakRel.lazer} />
-{/if}
+<div class="app">
+    <div class="contents">
+        <h1>lazer vs stable user counts</h1>
+        <div class="bars">
+            {#if changelogs}
+                <div class="bar">
+                    <h3>
+                        current (last check was at {new Date(
+                            changelogs.timestamp,
+                        ).toLocaleString("en-UK")})
+                    </h3>
+                    <Bars stable={changelogs.stable} lazer={changelogs.lazer} />
+                </div>
+            {:else}
+                <div>uhhh</div>
+            {/if}
+            {#if peak}
+                <div class="bar">
+                    <h3>
+                        lazer user count peak (at {new Date(peak.timestamp).toLocaleString(
+                            "en-UK",
+                        )})
+                    </h3>
+                    <Bars stable={peak.stable} lazer={peak.lazer} />
+                </div>
+                <div class="bar">
+                    <h3>
+                        lazer user percentage peak (at {new Date(
+                            peakRel.timestamp,
+                        ).toLocaleString("en-UK")})
+                    </h3>
+                    <Bars stable={peakRel.stable} lazer={peakRel.lazer} />
+                </div>
+            {/if}
+        </div>
+    </div>
+</div>
 
 <style>
+    :global(*) {
+        font-family: 'Iosevka Nerd Font';
+        box-sizing: border-box;
+        text-align: center;
+    }
+
+    :root {
+        overflow: hidden;
+    }
+
+    :global(body) {
+        margin: 0;
+    }
+
+    h1 { text-align: center }
+    h3 { margin: 0 }
+
+    .app {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100vw;
+        height: 100vh;
+    }
+
+    .contents {
+        width: 100vw;
+        max-width: 700px;
+        padding: 10px;
+    }
+
+    .bars {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .bar {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
     @media (prefers-color-scheme: light) {
-        body,
-        html,
         :root {
-            background-color: white;
+            background-color: #f6f6f6;
             color: black;
         }
     }
     @media (prefers-color-scheme: dark) {
-        body,
-        html,
         :root {
-            background-color: black;
+            background-color: #0b0b0b;
             color: white;
         }
     }
