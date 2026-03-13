@@ -32,17 +32,28 @@ setInterval(async () => {
     console.log("automatic update");
 }, 150000);
 
+type ChangelogData = {
+    timestamp: number;
+    stable: number;
+    lazer: number;
+};
+
 export async function getChangelogData() {
     if (!latestData || latestCheck < Date.now() - 300000) {
         console.log("Triggered an update");
         latestCheck = Date.now();
-        let data = null;
+        let data: ChangelogData | null = null;
+        const timeout = (ms: number) =>
+            new Promise<never>((_, reject) =>
+                setTimeout(() => reject(new Error("Request timed out")), ms),
+            );
         try {
-            setTimeout(() => {
-                data = getChangelogDataApi(latestCheck);
-            }, 1000);
-        } catch {
-            console.log("Request timed out");
+            data = await Promise.race<ChangelogData | null>([
+                getChangelogDataApi(latestCheck),
+                timeout(1000),
+            ]);
+        } catch (err) {
+            console.log(err);
             return latestData;
         }
         if (data !== null) {

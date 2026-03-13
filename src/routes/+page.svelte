@@ -6,6 +6,7 @@
     const changelogs = data.changelogs;
     const peak = data.peak;
     const peakRel = data.peakRel;
+    console.log(data);
 </script>
 
 <h1>lazer vs stable user counts</h1>
@@ -15,15 +16,15 @@
             changelogs.timestamp,
         ).toLocaleString("en-UK")})
     </p>
+    <Bars stable={changelogs.stable} lazer={changelogs.lazer} />
+    <p>
+        lazer user count peak (at {new Date(peak.timestamp).toLocaleString(
+            "en-UK",
+        )})
+    </p>
 {:else}
     <div>uhhh</div>
 {/if}
-<Bars stable={changelogs.stable} lazer={changelogs.lazer} />
-<p>
-    lazer user count peak (at {new Date(peak.timestamp).toLocaleString(
-        "en-UK",
-    )})
-</p>
 {#if peak}
     <Bars stable={peak.stable} lazer={peak.lazer} />
     <p>
