@@ -6,6 +6,7 @@
     const changelogs = data.changelogs;
     const peak = data.peak;
     const peakRel = data.peakRel;
+    const peakNear = data.nearPeak;
 </script>
 
 <svelte:head>
@@ -57,6 +58,14 @@
                         ).toLocaleString("en-UK")})
                     </h3>
                     <Bars stable={peakRel.stable} lazer={peakRel.lazer} />
+                </div>
+                <div class="bar">
+                    <h3>
+                        lazer user count peak near highest percentage (at {new Date(
+                            peakNear.timestamp,
+                        ).toLocaleString("en-UK")})
+                    </h3>
+                    <Bars stable={peakNear.stable} lazer={peakNear.lazer} />
                 </div>
             {/if}
         </div>

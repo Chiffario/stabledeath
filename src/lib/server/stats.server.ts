@@ -40,7 +40,10 @@ export async function getChangelogData() {
         let data: ChangelogData | null = null;
         const timeout = (ms: number) =>
             new Promise<never>((_, reject) =>
-                setTimeout(() => reject(new Error("Request timed out")), ms),
+                setTimeout(
+                    () => reject(new Error("Changelog request timed out")),
+                    ms,
+                ),
             );
         try {
             data = await Promise.race<ChangelogData | null>([
@@ -108,6 +111,31 @@ export async function getLazerRelativePeak() {
               WHERE (stable + lazer) > 0
             )`,
         );
+
+    const peakLazer = result[0];
+    return peakLazer;
+}
+
+export async function getLazerPeakNearTopPercentage() {
+    const maxPercentageResult = await db
+        .select({
+            maxPercentage: sql<number>`MAX(CAST(${measurementsTable.lazer} AS REAL) / (${measurementsTable.stable} + ${measurementsTable.lazer}))`,
+        })
+        .from(measurementsTable)
+        .where(
+            sql`(${measurementsTable.stable} + ${measurementsTable.lazer}) > 0`,
+        );
+
+    const maxPercentage = maxPercentageResult[0].maxPercentage;
+
+    const result = await db
+        .select()
+        .from(measurementsTable)
+        .where(
+            sql`(CAST(${measurementsTable.lazer} AS REAL) / (${measurementsTable.stable} + ${measurementsTable.lazer})) >= ${maxPercentage - 0.015}`,
+        )
+        .orderBy(sql`${measurementsTable.lazer} DESC`)
+        .limit(1);
 
     const peakLazer = result[0];
     return peakLazer;
