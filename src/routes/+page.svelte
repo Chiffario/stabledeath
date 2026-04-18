@@ -73,7 +73,7 @@
 </div>
 
 <style>
-    @import url("https://fonts.googleapis.com/css2?family=Inconsolata&display=swap");
+    @import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
     :global(*) {
         box-sizing: border-box;
         text-align: center;
@@ -81,11 +81,17 @@
 
     :root {
         overflow: hidden;
-        font-family: "Inconsolata", monospace;
+        font-family: "Inter", sans-serif;
         font-optical-sizing: auto;
         font-style: normal;
         line-height: 1.5;
         font-weight: 600;
+
+        font-synthesis: none;
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        -webkit-text-size-adjust: 100%;
     }
 
     :global(body) {
