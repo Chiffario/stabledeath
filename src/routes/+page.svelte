@@ -73,6 +73,7 @@
 </div>
 
 <style>
+    @import url("https://fonts.googleapis.com/css2?family=Inconsolata&display=swap");
     :global(*) {
         box-sizing: border-box;
         text-align: center;
@@ -80,6 +81,11 @@
 
     :root {
         overflow: hidden;
+        font-family: "Inconsolata", monospace;
+        font-optical-sizing: auto;
+        font-style: normal;
+        line-height: 1.5;
+        font-weight: 600;
     }
 
     :global(body) {
