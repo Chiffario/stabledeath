@@ -17,3 +17,7 @@ Build production assets:
 ```sh
 bun run build
 ```
+
+# AI usage
+
+Only for snippets + the funny easter egg route
