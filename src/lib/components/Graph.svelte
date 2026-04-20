@@ -10,6 +10,56 @@
     let userRatioContainer: HTMLDivElement;
     let userRatioPlot: uPlot;
 
+    const dateTimeSettings = [
+        [3600 * 24 * 365, "{YYYY}", null, null, null, null, null, null, 1],
+        [3600 * 24 * 28, "{MMM}", "\n{YYYY}", null, null, null, null, null, 1],
+        [3600 * 24, "{D}/{M}", "\n{YYYY}", null, null, null, null, null, 1],
+        [
+            3600,
+            "{h}{aa}",
+            "\n{D}/{M}/{YY}",
+            null,
+            "\n{D}/{M}",
+            null,
+            null,
+            null,
+            1,
+        ],
+        [
+            60,
+            "{h}:{mm}{aa}",
+            "\n{D}/{M}/{YY}",
+            null,
+            "\n{D}/{M}",
+            null,
+            null,
+            null,
+            1,
+        ],
+        [
+            1,
+            ":{ss}",
+            "\n{D}/{M}/{YY} {h}:{mm}{aa}",
+            null,
+            "\n{D}/{M} {h}:{mm}{aa}",
+            null,
+            "\n{h}:{mm}{aa}",
+            null,
+            1,
+        ],
+        [
+            0.001,
+            ":{ss}.{fff}",
+            "\n{D}/{M}/{YY} {h}:{mm}{aa}",
+            null,
+            "\n{D}/{M} {h}:{mm}{aa}",
+            null,
+            "\n{h}:{mm}{aa}",
+            null,
+            1,
+        ],
+    ];
+
     // Rosé Pine Dawn (light) / Rosé Pine (dark)
     function getColors() {
         const dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
@@ -47,6 +97,7 @@
                     stroke: c.text,
                     grid: { stroke: c.grid },
                     ticks: { stroke: c.border },
+                    values: dateTimeSettings,
                 },
                 {
                     stroke: c.text,
@@ -73,6 +124,7 @@
                     stroke: c.text,
                     grid: { stroke: c.grid },
                     ticks: { stroke: c.border },
+                    values: dateTimeSettings,
                 },
                 {
                     stroke: c.text,
