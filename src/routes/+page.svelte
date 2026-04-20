@@ -31,14 +31,11 @@
     };
 
     const opengraphHeader = () => {
-        console.log(ratio);
         const areWeYet =
             ratio < 50.0 ? "we are not lazer yet" : "we are lazer now";
         const start = `Currently the percentage is ${ratio}%. ${areWeYet}`;
         return start;
     };
-    opengraphHeader();
-    // console.log(data.userCountData);
 </script>
 
 <svelte:head>
