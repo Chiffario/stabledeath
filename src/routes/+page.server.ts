@@ -1,6 +1,8 @@
 // src/routes/+page.server.ts
 import {
     getChangelogData,
+    getLastDay,
+    getLastDayRatio,
     getLazerAbsolutePeak,
     getLazerPeakNearTopPercentage,
     getLazerRelativePeak,
@@ -16,5 +18,7 @@ export const load = async () => {
         nearPeak: await getLazerPeakNearTopPercentage(),
         userCountData: await getUserCountGraph(),
         userRatioData: await getUserRatioGraph(),
+        dayUserCountData: await getLastDay(),
+        dayUserRatioData: await getLastDayRatio(),
     };
 };

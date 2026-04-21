@@ -1,7 +1,7 @@
 import * as osu from "osu-api-v2-js";
 import { env } from "$env/dynamic/private";
 import { measurementsTable } from "../db/schema.ts";
-import { sql } from "drizzle-orm";
+import { desc, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/libsql";
 import { type ChangelogEntry, getPlayerCounts } from "$utils/data.ts";
 
@@ -158,13 +158,13 @@ export async function getLazerPeakNearTopPercentage(): Promise<ChangelogData> {
 }
 
 type UserGraph = {
-    timestamps: number[];
+    timestamp: number[];
     stable: number[];
     lazer: number[];
 };
 
 type RatioGraph = {
-    timestamps: number[];
+    timestamp: number[];
     ratio: number[];
 };
 
@@ -211,13 +211,13 @@ export async function getUserCountGraph(): Promise<UserGraph> {
 
     latestUserGraph = rows.reduce(
         (acc, d) => {
-            acc.timestamps.push(d.timestamp / 1000);
+            acc.timestamp.push(d.timestamp / 1000);
             acc.stable.push(d.stable);
             acc.lazer.push(d.lazer);
             return acc;
         },
         {
-            timestamps: [] as number[],
+            timestamp: [] as number[],
             stable: [] as number[],
             lazer: [] as number[],
         },
@@ -262,11 +262,67 @@ export async function getUserRatioGraph(): Promise<RatioGraph> {
       ORDER BY b.timestamp`);
     latestRatioGraph = rows.reduce(
         (acc, d) => {
-            acc.timestamps.push(d.timestamp / 1000);
+            acc.timestamp.push(d.timestamp / 1000);
             acc.ratio.push(d.ratio * 100);
             return acc;
         },
-        { timestamps: [] as number[], ratio: [] as number[] },
+        { timestamp: [] as number[], ratio: [] as number[] },
     );
     return latestRatioGraph;
+}
+
+let lastDayUserGraph: UserGraph | null = null;
+let lastDayRatioGraph: RatioGraph | null = null;
+
+export async function getLastDay(): Promise<UserGraph> {
+    if (lastDayUserGraph && latestCheck > Date.now() - 300000) {
+        return lastDayUserGraph;
+    }
+
+    const rows = (
+        await getDb()
+            .select()
+            .from(measurementsTable)
+            .orderBy(desc(measurementsTable.timestamp))
+            .limit(288)
+    )
+        .reverse()
+        .reduce(
+            (acc, d) => {
+                acc.users.timestamp.push(d.timestamp / 1000);
+                acc.users.stable.push(d.stable ?? 0);
+                acc.users.lazer.push(d.lazer ?? 0);
+                acc.ratio.timestamp.push(d.timestamp / 1000);
+                acc.ratio.ratio.push(
+                    ((d.lazer ?? 0) / ((d.lazer ?? 0) + (d.stable ?? 0))) * 100,
+                );
+                return acc;
+            },
+            {
+                users: {
+                    timestamp: [] as number[],
+                    stable: [] as number[],
+                    lazer: [] as number[],
+                },
+                ratio: {
+                    timestamp: [] as number[],
+                    ratio: [] as number[],
+                },
+            },
+        );
+
+    lastDayUserGraph = rows.users;
+    lastDayRatioGraph = rows.ratio;
+    return lastDayUserGraph;
+}
+
+export async function getLastDayRatio(): Promise<RatioGraph> {
+    if (lastDayRatioGraph && latestCheck > Date.now() - 300000) {
+        return lastDayRatioGraph;
+    }
+
+    getLastDay();
+
+    // getLastDay sets both
+    return lastDayRatioGraph!;
 }

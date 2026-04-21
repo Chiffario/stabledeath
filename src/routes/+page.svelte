@@ -17,6 +17,8 @@
     const nearPeak = $derived(data.nearPeak);
     const userCountData = $derived(data.userCountData);
     const userRatioData = $derived(data.userRatioData);
+    const dayUserCountData = $derived(data.dayUserCountData);
+    const dayUserRatioData = $derived(data.dayUserRatioData);
 
     onMount(() => {
         const interval = setInterval(() => {
@@ -97,16 +99,27 @@
         <MilestoneList />
         <h2>Graphs</h2>
         <ComparisonGraph
-            timestamps={userCountData.timestamps}
+            timestamps={userCountData.timestamp}
             stable={userCountData.stable}
             lazer={userCountData.lazer}
             name="user counts"
-        ></ComparisonGraph>
+        />
         <RatioGraph
             values={userRatioData.ratio}
-            timestamps={userRatioData.timestamps}
+            timestamps={userRatioData.timestamp}
             name="lazer user ratio"
-        ></RatioGraph>
+        />
+        <ComparisonGraph
+            timestamps={dayUserCountData.timestamp}
+            stable={dayUserCountData.stable}
+            lazer={dayUserCountData.lazer}
+            name="user count for last 24h"
+        />
+        <RatioGraph
+            values={dayUserRatioData.ratio}
+            timestamps={dayUserRatioData.timestamp}
+            name="lazer user ratio for last 24h"
+        />
         <Footer />
     </div>
 </div>
