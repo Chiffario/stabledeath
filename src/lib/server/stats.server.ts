@@ -40,7 +40,6 @@ setInterval(async () => {
         console.log("Triggered an update");
         latestCheck = Date.now();
         latestData = await getChangelogDataApi(latestCheck);
-        await getLastDay();
     }
     console.log("automatic update");
 }, 150000);
@@ -293,10 +292,6 @@ export async function getLastDay(): Promise<UserGraph> {
                 acc.users.timestamp.push(d.timestamp / 1000);
                 acc.users.stable.push(d.stable ?? 0);
                 acc.users.lazer.push(d.lazer ?? 0);
-                acc.ratio.timestamp.push(d.timestamp / 1000);
-                acc.ratio.ratio.push(
-                    ((d.lazer ?? 0) / ((d.lazer ?? 0) + (d.stable ?? 0))) * 100,
-                );
                 return acc;
             },
             {
@@ -305,15 +300,10 @@ export async function getLastDay(): Promise<UserGraph> {
                     stable: [] as number[],
                     lazer: [] as number[],
                 },
-                ratio: {
-                    timestamp: [] as number[],
-                    ratio: [] as number[],
-                },
             },
         );
 
     lastDayUserGraph = rows.users;
-    lastDayRatioGraph = rows.ratio;
     return lastDayUserGraph;
 }
 
@@ -322,8 +312,30 @@ export async function getLastDayRatio(): Promise<RatioGraph> {
         return lastDayRatioGraph;
     }
 
-    await getLastDay();
+    const rows = (
+        await getDb()
+            .select()
+            .from(measurementsTable)
+            .orderBy(desc(measurementsTable.timestamp))
+            .limit(288)
+    )
+        .reverse()
+        .reduce(
+            (acc, d) => {
+                acc.ratio.timestamp.push(d.timestamp / 1000);
+                acc.ratio.ratio.push(
+                    ((d.lazer ?? 0) / ((d.lazer ?? 0) + (d.stable ?? 0))) * 100,
+                );
+                return acc;
+            },
+            {
+                ratio: {
+                    timestamp: [] as number[],
+                    ratio: [] as number[],
+                },
+            },
+        );
 
-    // getLastDay sets both
-    return lastDayRatioGraph!;
+    lastDayRatioGraph = rows.ratio;
+    return lastDayRatioGraph;
 }
