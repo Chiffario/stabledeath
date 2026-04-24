@@ -31,7 +31,9 @@
     });
     const ratio = $derived(
         Math.round(
-            (changelogs.lazer / (changelogs.stable + changelogs.lazer)) * 10000,
+            ((changelogs?.lazer ?? 0) /
+                ((changelogs?.stable ?? 0) + (changelogs?.lazer ?? 0))) *
+                10000,
         ) / 100,
     );
 
