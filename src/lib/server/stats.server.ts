@@ -5,6 +5,7 @@ import { desc, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/libsql";
 import { type ChangelogEntry, getPlayerCounts, timeout } from "$utils/data.ts";
 import { log, debug, warn, error } from "$utils/logs.ts";
+import { nonZeroNumber, now, type NonZeroNumber } from "$utils/types.ts";
 
 let _db: ReturnType<typeof drizzle> | null = null;
 // Lazy initialization of the database
@@ -43,12 +44,12 @@ function getApiClient() {
 }
 
 let latestData: typeof measurementsTable.$inferSelect | null = null;
-let latestCheck: number = 0;
+let latestCheck: NonZeroNumber;
 
 setInterval(async () => {
     if (!latestData || latestCheck < Date.now() - 300000) {
         log("Triggered an update");
-        latestCheck = Date.now();
+        latestCheck = now();
         log("Current timestamp is ", latestCheck);
         latestData = await getChangelogDataApi(latestCheck);
         log("Fetched osu!api data", latestData);
@@ -76,8 +77,8 @@ export async function getChangelogData() {
     }
 
     /// Guard against fetching before an autoupdate
-    if (latestCheck === 0) {
-        latestCheck = Date.now();
+    if (latestCheck === undefined) {
+        latestCheck = now();
     }
 
     log("Triggered an update");
@@ -98,14 +99,14 @@ export async function getChangelogData() {
     return latestData;
 }
 
-export async function getChangelogDataApi(timestamp: number): Promise<{
+export async function getChangelogDataApi(timestamp: NonZeroNumber): Promise<{
     timestamp: number;
     stable: number;
     lazer: number;
 } | null> {
     let changelogs: ChangelogEntry[] = [];
     try {
-        const client = await getApiClient();
+        const client = apiClientPromise;
         log("Got an API client");
         changelogs = await client.getChangelogStreams();
         log("Got changelogs");
