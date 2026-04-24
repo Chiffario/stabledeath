@@ -10,7 +10,6 @@ let _db: ReturnType<typeof drizzle> | null = null;
 // Lazy initialization of the database
 function getDb() {
     if (_db) {
-        log("Getting initialized database");
         return _db;
     }
 
@@ -50,6 +49,7 @@ setInterval(async () => {
     if (!latestData || latestCheck < Date.now() - 300000) {
         log("Triggered an update");
         latestCheck = Date.now();
+        log("Current timestamp is ", latestCheck);
         latestData = await getChangelogDataApi(latestCheck);
         log("Fetched osu!api data", latestData);
         await Promise.all([
@@ -74,6 +74,12 @@ export async function getChangelogData() {
         log("Updated recently, returning latest");
         return latestData;
     }
+
+    /// Guard against fetching before an autoupdate
+    if (latestCheck === 0) {
+        latestCheck = Date.now();
+    }
+
     log("Triggered an update");
     let data: ChangelogData | null = null;
     try {
