@@ -126,6 +126,9 @@
             name="lazer user ratio for last 24h"
         />
 
+        <h2>Historic usage data extracted from Internet Archive snapshots</h2>
+        <h4>Please remember that it might be slightly inaccurate</h4>
+
         <ComparisonGraph
             timestamps={historicCount.date}
             stable={historicCount.stable}
