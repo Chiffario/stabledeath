@@ -10,5 +10,9 @@ export function nonZeroNumber(value: number): NonZeroNumber | undefined {
 }
 
 export function now(): NonZeroNumber {
-    return nonZeroNumber(Date.now()) as NonZeroNumber;
+    return nonZeroNumber(Math.round(Date.now() / 1000)) as NonZeroNumber;
+}
+
+export function date(timestamp: number): string {
+    return new Date(timestamp * 1000).toLocaleString("en-UK");
 }

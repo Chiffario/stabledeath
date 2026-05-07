@@ -9,6 +9,7 @@
     import RatioGraph from "$components/RatioGraph.svelte";
     import ComparisonGraph from "$components/ComparisonGraph.svelte";
     import GraphSet from "$components/GraphSet.svelte";
+    import { date } from "$utils/types.js";
 
     let { data } = $props();
 
@@ -77,28 +78,22 @@
         <div class="bars">
             {#if changelogs}
                 <BarBlock stable={changelogs.stable} lazer={changelogs.lazer}>
-                    current (as of {new Date(
-                        changelogs.timestamp,
-                    ).toLocaleString("en-UK")})
+                    current (as of {date(changelogs.timestamp)})
                 </BarBlock>
             {:else}
                 <div>uhhh</div>
             {/if}
             {#if peak}
                 <BarBlock stable={peak.stable} lazer={peak.lazer}>
-                    lazer user count peak (at {new Date(
-                        peak.timestamp,
-                    ).toLocaleString("en-UK")})
+                    lazer user count peak (at {date(peak.timestamp)})
                 </BarBlock>
                 <BarBlock stable={peakRel.stable} lazer={peakRel.lazer}>
-                    lazer user percentage peak (at {new Date(
-                        peakRel.timestamp,
-                    ).toLocaleString("en-UK")})
+                    lazer user percentage peak (at {date(peakRel.timestamp)})
                 </BarBlock>
                 <BarBlock stable={nearPeak.stable} lazer={nearPeak.lazer}>
-                    lazer user count peak near highest percentage (at {new Date(
+                    lazer user count peak near highest percentage (at {date(
                         nearPeak.timestamp,
-                    ).toLocaleString("en-UK")})
+                    )})
                 </BarBlock>
             {/if}
         </div>
