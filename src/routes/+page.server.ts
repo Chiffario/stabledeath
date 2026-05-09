@@ -8,7 +8,7 @@ import {
     getUserCountGraph,
     getUserRatioGraph,
 } from "../lib/server/stats.server.ts";
-import { getLastDay, getLastDayRatio } from "$lib/server/last_day.ts";
+import { getLastDay, getLastDayRatio } from "$lib/server/last_day.server.ts";
 
 export const load = async () => {
     const [

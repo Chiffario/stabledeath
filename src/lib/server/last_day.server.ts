@@ -6,8 +6,8 @@ import {
     type UserGraph,
     type RatioGraph,
     getDb,
-    latestCheck,
-} from "./stats.server";
+    getLatestCheck,
+} from "./stats.server.ts";
 
 let lastDayUserGraph: UserGraph | null = null;
 let lastDayRatioGraph: RatioGraph | null = null;
@@ -18,7 +18,7 @@ export async function updateLastDay() {
             .select()
             .from(measurementsTable)
             .orderBy(desc(measurementsTable.timestamp))
-            .limit(288)
+            .limit(288 * 2)
     )
         .reverse()
         .reduce(
@@ -48,7 +48,9 @@ export async function updateLastDay() {
     lastDayRatioGraph = { timestamps: rows.timestamps, ratio: rows.ratio };
 }
 function isLastDayUpdated() {
-    return lastDayUserGraph && lastDayRatioGraph && latestCheck > now() - 150;
+    return (
+        lastDayUserGraph && lastDayRatioGraph && getLatestCheck() > now() - 150
+    );
 }
 
 async function ensureLastDayGraphs() {
