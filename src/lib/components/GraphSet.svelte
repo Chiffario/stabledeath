@@ -1,6 +1,6 @@
 <script lang="ts">
     import ComparisonGraph from "$components/ComparisonGraph.svelte";
-    import RatioGraph from "./RatioGraph.svelte";
+    import RatioGraph from "$components/RatioGraph.svelte";
 
     let {
         comparison,
