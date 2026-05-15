@@ -1,4 +1,5 @@
 import type { ChartConfiguration } from "chart.js";
+import type { AnnotationOptions } from "chartjs-plugin-annotation";
 
 const milestones = [
     { date: "2024-01-29", label: "pp release" },
@@ -25,7 +26,7 @@ export function getColors() {
 }
 
 const generateAnnotations = () => {
-    const annotations: Record<string, any> = {};
+    const annotations: Record<string, AnnotationOptions> = {};
     for (const milestone of milestones) {
         annotations[`milestone_${milestone.date}`] = {
             type: "line",
@@ -37,7 +38,9 @@ const generateAnnotations = () => {
                 content: milestone.label,
                 display: true,
                 position: "end",
-                backgroundColor: "rgba(0, 0, 0, 0.5)",
+                backgroundColor: "#26233a",
+                borderColor: "#524f67",
+                borderWidth: 1,
                 font: {
                     size: 10,
                     weight: "normal",
