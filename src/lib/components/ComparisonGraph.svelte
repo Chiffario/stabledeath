@@ -97,8 +97,8 @@
             graphChart.data.labels = timestamps.map((ts) =>
                 Math.floor(ts * 1000),
             );
-            graphChart.data.datasets[0].data = lazer;
-            graphChart.data.datasets[1].data = stable;
+            graphChart.data.datasets[0].data = stable;
+            graphChart.data.datasets[1].data = lazer;
             graphChart.data.datasets[2].data = sum;
             graphChart.update();
         }
