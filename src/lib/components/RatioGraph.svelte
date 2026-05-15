@@ -7,13 +7,23 @@
 
     let Chart: typeof ChartType;
 
-    let { timestamps, values, name, is24h }: { timestamps: number[]; values: number[]; name: string; is24h?: boolean } = $props();
+    let {
+        timestamps,
+        values,
+        name,
+        is24h,
+    }: {
+        timestamps: number[];
+        values: number[];
+        name: string;
+        is24h?: boolean;
+    } = $props();
 
-    let chartCanvas: HTMLCanvasElement;
-    let graphChart: ChartType | undefined;
+    let chartCanvas: HTMLCanvasElement = $state();
+    let graphChart: ChartType | undefined = $state();
     let resizeFrame: number | undefined;
     let lastWidth = 0;
-    let mounted = false;
+    let mounted = $state(false);
     let queuedRenderCancel: (() => void) | undefined;
 
     function createPlot() {
@@ -23,7 +33,10 @@
 
         lastWidth = chartCanvas.clientWidth;
 
-        graphChart = new Chart(chartCanvas, makeUserRatioConfiguration(timestamps, values, name, is24h));
+        graphChart = new Chart(
+            chartCanvas,
+            makeUserRatioConfiguration(timestamps, values, name, is24h),
+        );
     }
 
     function handleDoubleclick() {
@@ -69,7 +82,9 @@
 
     $effect(() => {
         if (graphChart) {
-            graphChart.data.labels = timestamps.map((ts) => Math.floor(ts * 1000));
+            graphChart.data.labels = timestamps.map((ts) =>
+                Math.floor(ts * 1000),
+            );
             graphChart.data.datasets[0].data = values;
             graphChart.update();
         }
@@ -85,8 +100,10 @@
 
         // dynamically import the modules on the client. zoom plugin will not work with ssr for example
         const initChart = async () => {
-            const { Chart: ChartModule, registerables } = await import("chart.js");
-            const annotationPlugin = (await import("chartjs-plugin-annotation")).default;
+            const { Chart: ChartModule, registerables } =
+                await import("chart.js");
+            const annotationPlugin = (await import("chartjs-plugin-annotation"))
+                .default;
             const zoomPlugin = (await import("chartjs-plugin-zoom")).default;
 
             if (isCancelled) return;
@@ -147,5 +164,12 @@
 </script>
 
 <div style="height: 450px; max-width: 700px; width: 100%">
-    <canvas bind:this={chartCanvas} ondblclick={handleDoubleclick} style="width: 100%; height: 100%;"></canvas>
+    {#if !mounted}
+        <span>Waiting for the chart to load...</span>
+    {/if}
+    <canvas
+        bind:this={chartCanvas}
+        ondblclick={handleDoubleclick}
+        style="width: 100%; height: 100%;"
+    ></canvas>
 </div>
