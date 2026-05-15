@@ -1,4 +1,8 @@
 <script lang="ts">
+    import { ResizeObserver as Polyfill } from "@juggle/resize-observer";
+
+    const ResizeObserver = window.ResizeObserver || Polyfill;
+
     import { onMount, onDestroy } from "svelte";
     import { makeUserCountConfiguration } from "$lib/utils/graph.ts";
     import { queueRender } from "$utils/renderQueue";
