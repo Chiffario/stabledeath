@@ -157,7 +157,7 @@ export function makeUserRatioConfiguration(
                         color: colors.text,
                         padding: 5,
                         callback: (value) =>
-                            (Number(value) / 100).toLocaleString(undefined, {
+                            (Number(value) / 100).toLocaleString("en-US", {
                                 style: "percent",
                                 maximumFractionDigits: 1,
                             }),
@@ -277,7 +277,10 @@ export function makeUserCountConfiguration(
                     ticks: {
                         color: colors.text,
                         padding: 5,
-                        callback: (value) => value.toLocaleString(undefined, { maximumFractionDigits: 0 }),
+                        callback: (value) =>
+                            value.toLocaleString("en-US", {
+                                maximumFractionDigits: 0,
+                            }),
                     },
                 },
                 x: {
