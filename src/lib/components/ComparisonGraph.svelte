@@ -177,7 +177,7 @@
     });
 </script>
 
-<div style="height: 450px; max-width: 700px; width: 100%">
+<div style="height: 450px; max-width: 700px; padding: 0 10px; width: 100%">
     {#if !mounted}
         <span>Waiting for the chart to load...</span>
     {/if}
