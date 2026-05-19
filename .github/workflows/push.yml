@@ -15,7 +15,18 @@ env:
 
 jobs:
     docker:
-        runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false
+            max-parallel: 2
+            matrix:
+                include:
+                    - runner: ubuntu-24.04
+                      platform: linux/amd64
+                      tag_suffix: x86_64
+                    - runner: ubuntu-24.04-arm
+                      platform: linux/arm64
+                      tag_suffix: arm64
+        runs-on: ${{ matrix.runner }}
         permissions:
             contents: read
             packages: write
@@ -34,14 +45,15 @@ jobs:
                   username: ${{ github.actor }}
                   password: ${{ secrets.GITHUB_TOKEN }}
 
-            - name: Build and publish
+            - name: Build and publish ${{ matrix.tag_suffix }} image
               uses: docker/build-push-action@v5
               with:
                   context: .
+                  platforms: ${{ matrix.platform }}
                   push: true
                   tags: |
-                      ${{ env.IMAGE_NAME }}:latest
-                      ${{ env.IMAGE_NAME }}:${{ github.sha }}
-                      ${{ env.IMAGE_NAME }}:${{ github.ref_name }}
-                  cache-from: type=gha
-                  cache-to: type=gha,mode=max
+                      ${{ env.IMAGE_NAME }}:latest-${{ matrix.tag_suffix }}
+                      ${{ env.IMAGE_NAME }}:${{ github.sha }}-${{ matrix.tag_suffix }}
+                      ${{ env.IMAGE_NAME }}:${{ github.ref_name }}-${{ matrix.tag_suffix }}
+                  cache-from: type=gha,scope=${{ matrix.tag_suffix }}
+                  cache-to: type=gha,mode=max,scope=${{ matrix.tag_suffix }}
