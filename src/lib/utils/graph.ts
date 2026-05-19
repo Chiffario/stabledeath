@@ -44,7 +44,7 @@ function getZoomOptions(is24h: boolean) {
             onZoomComplete({ chart }) {
                 if (!chart.options.scales?.x?.time) return;
                 if (chart.isZoomedOrPanned()) {
-                    chart.options.scales.x.time = {};
+                    chart.options.scales.x.time as any = {};
                 } else {
                     chart.options.scales.x.time = {
                         unit: is24h ? "hour" : "month",

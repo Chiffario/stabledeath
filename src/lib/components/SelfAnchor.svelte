@@ -41,9 +41,4 @@
         color: inherit;
         text-decoration: none;
     }
-
-    .anchor-link.copied::after {
-        content: " (copied)";
-        font-size: 0.8em;
-    }
 </style>

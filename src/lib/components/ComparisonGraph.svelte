@@ -1,7 +1,6 @@
 <script lang="ts">
     import { onMount, onDestroy } from "svelte";
     import { makeUserCountConfiguration } from "$lib/utils/graph.ts";
-    import { queueRender } from "$utils/renderQueue";
 
     import type { Chart as ChartType } from "chart.js";
     import "chartjs-adapter-dayjs-4/dist/chartjs-adapter-dayjs-4.esm";
@@ -29,7 +28,6 @@
     let resizeFrame: number | undefined;
     let lastWidth = 0;
     let mounted = $state(false);
-    let queuedRenderCancel: (() => void) | undefined;
 
     function createPlot() {
         if (!mounted || graphChart || !chartCanvas?.isConnected) {
@@ -87,11 +85,6 @@
         });
     }
 
-    function queueCreatePlot() {
-        queuedRenderCancel?.();
-        queuedRenderCancel = queueRender(createPlot);
-    }
-
     $effect(() => {
         if (graphChart) {
             graphChart.data.labels = timestamps.map((ts) =>
@@ -128,7 +121,7 @@
             mounted = true;
 
             mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-            onSchemeChange = () => queueRender(recreatePlot);
+            onSchemeChange = recreatePlot;
 
             mediaQuery.addEventListener("change", onSchemeChange);
 
@@ -142,7 +135,7 @@
                         return;
                     }
 
-                    queueCreatePlot();
+                    createPlot();
                     io?.disconnect();
                 },
                 { rootMargin: "300px" },
@@ -156,7 +149,6 @@
         return () => {
             isCancelled = true;
             mounted = false;
-            queuedRenderCancel?.();
 
             if (mediaQuery && onSchemeChange) {
                 mediaQuery.removeEventListener("change", onSchemeChange);
