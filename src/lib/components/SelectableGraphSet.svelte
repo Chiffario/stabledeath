@@ -47,7 +47,7 @@
         <Segment value="Week">Weekly</Segment>
     </SegmentedControl>
 </div>
-<div class="graph-box">
+<div>
     {#if selected == "Day"}
         <GraphSet
             comparison={comparison.comparison_daily}

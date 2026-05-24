@@ -6,7 +6,7 @@
     let { value, onChange, children } = $props();
 
     // local reactive state synced with prop
-    let selected = $state(value);
+    let selected = $derived(value);
 
     // keep internal state in sync if parent changes `value`
     $effect(() => {
