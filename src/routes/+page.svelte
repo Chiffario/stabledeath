@@ -9,6 +9,7 @@
     import { date } from "$utils/types.js";
     import SelfAnchor from "$components/SelfAnchor.svelte";
     import favicon from "../assets/favicon.ico";
+    import SelectableGraphSet from "$components/SelectableGraphSet.svelte";
 
     let { data } = $props();
 
@@ -115,16 +116,22 @@
                 </SelfAnchor>
             </GraphSet>
 
-            <GraphSet
-                comparison={historicCount}
+            <SelectableGraphSet
+                comparison={{
+                    comparison_daily: historicCount.daily,
+                    comparison_weekly: historicCount.weekly,
+                }}
                 comparison_name="historic user counts"
-                ratio={historicCount}
+                ratio={{
+                    ratio_daily: historicCount.daily,
+                    ratio_weekly: historicCount.weekly,
+                }}
                 ratio_name="historic lazer%"
             >
                 <SelfAnchor anchor="history">
                     <h2>historic data</h2>
                 </SelfAnchor>
-            </GraphSet>
+            </SelectableGraphSet>
         </div>
         <MilestoneList />
         <Footer />

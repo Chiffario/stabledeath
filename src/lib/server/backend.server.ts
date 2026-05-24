@@ -159,6 +159,17 @@ export async function getHistoryGraph(fetch: LoadFetch) {
     );
 }
 
+/// A bit dirty but requires Redis to clean up so I cba yet
+export async function getHistoryGraphWeekly(fetch: LoadFetch) {
+    return cached("graphs:history:week", 60 * MINUTE, async () =>
+        normalizePointLine(
+            await getJson<PointLineResponse>(
+                fetch,
+                "/api/graphs/history?bucket_size=Week",
+            ),
+        ),
+    );
+}
 export async function getRatioEstimate(fetch: LoadFetch, percentage: number) {
     return cached(`graphs:ratio_estimate:${percentage}`, 5 * MINUTE, async () =>
         getJson<RegressionResult>(
@@ -170,15 +181,23 @@ export async function getRatioEstimate(fetch: LoadFetch, percentage: number) {
 
 export async function getHomeView(fetch: LoadFetch) {
     return cached("view:home", 5 * MINUTE, async () => {
-        const [changelogs, peak, peakRel, nearPeak, dayGraph, historyGraph] =
-            await Promise.all([
-                getCurrent(fetch),
-                getPeakUsers(fetch),
-                getPeakRatio(fetch),
-                getPeakPercentile(fetch),
-                getDayGraph(fetch),
-                getHistoryGraph(fetch),
-            ]);
+        const [
+            changelogs,
+            peak,
+            peakRel,
+            nearPeak,
+            dayGraph,
+            historyGraph,
+            historyGraphWeekly,
+        ] = await Promise.all([
+            getCurrent(fetch),
+            getPeakUsers(fetch),
+            getPeakRatio(fetch),
+            getPeakPercentile(fetch),
+            getDayGraph(fetch),
+            getHistoryGraph(fetch),
+            getHistoryGraphWeekly(fetch),
+        ]);
 
         return {
             changelogs,
@@ -186,7 +205,10 @@ export async function getHomeView(fetch: LoadFetch) {
             peakRel,
             nearPeak,
             userCountData: dayGraph,
-            historicUserCount: historyGraph,
+            historicUserCount: {
+                daily: historyGraph,
+                weekly: historyGraphWeekly,
+            },
         };
     });
 }

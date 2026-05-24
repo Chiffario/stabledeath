@@ -20,12 +20,12 @@
         ratio: { timestamp: number[]; ratio: number[] };
         ratio_name: string;
         is24h?: boolean;
-        children: any;
+        children?: any;
     } = $props();
 </script>
 
 <div class="children">
-    {@render children()}
+    {@render children?.()}
 </div>
 <div class="graph-box">
     <ComparisonGraph
