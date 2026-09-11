@@ -113,15 +113,6 @@
                 >
                     highest lazer ratio ({date(peakRel.timestamp)})
                 </BarBlock>
-                <BarBlock
-                    anchor="percentile"
-                    stable={nearPeak.stable}
-                    lazer={nearPeak.lazer}
-                >
-                    highest usage while near peak ratio ({date(
-                        nearPeak.timestamp,
-                    )})
-                </BarBlock>
             {/if}
         </div>
         <RatioEstimate />
