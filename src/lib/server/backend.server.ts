@@ -39,6 +39,7 @@ export async function getJson<T>(
     const response = await fetch(`${domain}${path}`);
 
     if (!response.ok) {
+        console.log(`request failed: ${path} ${response.status}`)
         throw new Error(` request failed: ${path} ${response.status}`);
     }
 

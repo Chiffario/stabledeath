@@ -1,6 +1,5 @@
 import { getRatioEstimate } from "$lib/server/backend.server";
-import { json, error } from "@sveltejs/kit";
-import type { RequestHandler } from "./$types";
+import { json, error, type RequestHandler } from "@sveltejs/kit";
 
 export const GET: RequestHandler = async ({ fetch, params }) => {
     const percentage = Number(params.percentage);

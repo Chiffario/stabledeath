@@ -7,9 +7,15 @@
     let { values } = $props();
 
     let buckets: "daily" | "weekly" | "monthly" = $state("daily");
+    let type: "scores" | "users" = $state("users");
 </script>
 
 <div class="outer-box">
+    <SegmentedControl value={type} onChange={(v) => (type = v)}>
+        {#each ["scores", "users"] as option}
+            <Segment value={option}>{option}</Segment>
+        {/each}
+    </SegmentedControl>
     <SegmentedControl value={buckets} onChange={(v) => (buckets = v)}>
         {#each ["daily", "weekly", "monthly"] as option}
             <Segment value={option}>{option}</Segment>

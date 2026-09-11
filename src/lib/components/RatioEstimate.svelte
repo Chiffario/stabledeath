@@ -34,7 +34,7 @@
         const timeout = setTimeout(async () => {
             try {
                 const response = await fetch(
-                    `/api/graphs/ratio_estimate/${selectedPercentage}`,
+                    `/graphs/ratio_estimate/${selectedPercentage}`,
                     { signal: controller.signal },
                 );
 
