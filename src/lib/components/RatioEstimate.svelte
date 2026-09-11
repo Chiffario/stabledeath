@@ -69,10 +69,10 @@
 
 <section class="estimate">
     <SelfAnchor anchor="regression">
-        <h2>daily average ratio estimate</h2>
+        <h2>How long until...</h2>
     </SelfAnchor>
     <label>
-        target lazer ratio: {percentage}%
+        {percentage}% on lazer
         <div class="slider" style="--stable: {percentage}%">
             <div class="bar-container">
                 <div class="stable-bar"></div>
