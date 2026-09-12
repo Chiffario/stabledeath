@@ -300,7 +300,7 @@ export function makeUserCountConfiguration(
             scales: {
                 y: {
                     beginAtZero: true,
-                    max: 20000,
+                    max: 25000,
                     grid: {
                         color: colors.grid,
                         lineWidth: 2,
